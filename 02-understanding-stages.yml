@@ -17,19 +17,16 @@ stages:
   jobs:
   - job: DevDeployJob
     steps:
-    - bash: echo Build DevDeployJob
+    - bash: echo DevDeployJob
 - stage: QADeploy
   jobs:
   - job: QADeployJob
     steps:
-    - bash: echo Build QADeployJob
+    - bash: echo QADeployJob
 - stage: ProdDeploy
   jobs:
   - job: ProdDeployJob
     steps:
-    - bash: echo Build ProdDeployJob
+    - bash: echo ProdDeployJob
 
-steps:
-- script: echo Job1 Step1!
-  displayName: 'Run a one-line script'
 
