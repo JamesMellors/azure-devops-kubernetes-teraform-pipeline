@@ -59,8 +59,6 @@ metadata:
     app: currency-exchange
   name: currency-exchange
   namespace: default
-  annotations:
-    kubernetes.io/ingress.class: addon-http-application-routing
 spec:
   ports:
   - # nodePort: 30702 #CHANGE
