@@ -29,12 +29,12 @@ steps:
     backendAzureRmKey: 'kubernetes-dev.tfstate'
     allowTelemetryCollection: true
 
-- task: TerraformCLI@0
-  inputs:
-    command: 'forceunlock'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
-    allowTelemetryCollection: false
-    lockID: 'fffebfc2-37dc-e67e-2cca-c39df38e0002'
+# - task: TerraformCLI@0
+#   inputs:
+#     command: 'forceunlock'
+#     workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+#     allowTelemetryCollection: false
+#     lockID: 'fffebfc2-37dc-e67e-2cca-c39df38e0002'
 
 - task: TerraformCLI@0
   inputs:
@@ -44,11 +44,11 @@ steps:
     commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publicKey.secureFilePath)'
     allowTelemetryCollection: false
 
-- task: TerraformCLI@0
-  inputs:
-    command: 'destroy'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
-    environmentServiceName: 'azure-resource-manager-service-connection'
-    commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publicKey.secureFilePath)'
-    allowTelemetryCollection: false
+# - task: TerraformCLI@0
+#   inputs:
+#     command: 'destroy'
+#     workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+#     environmentServiceName: 'azure-resource-manager-service-connection'
+#     commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publicKey.secureFilePath)'
+#     allowTelemetryCollection: false
 
