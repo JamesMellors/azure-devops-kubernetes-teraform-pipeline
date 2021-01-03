@@ -27,7 +27,7 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - name: liveness-port
-          containerPort: 8000
+          containerPort: 80
         resources: #CHANGE
           requests:
             cpu: 100m
@@ -59,12 +59,14 @@ metadata:
     app: currency-exchange
   name: currency-exchange
   namespace: default
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
 spec:
   ports:
   - # nodePort: 30702 #CHANGE
-    port: 8000 #CHANGE
+    port: 80 #CHANGE
     protocol: TCP
-    targetPort: 8000 #CHANGE
+    targetPort: 80 #CHANGE
   selector:
     app: currency-exchange
   sessionAffinity: None #CHANGE
