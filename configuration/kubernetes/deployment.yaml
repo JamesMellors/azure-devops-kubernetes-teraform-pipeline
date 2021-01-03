@@ -27,7 +27,7 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - name: liveness-port
-          containerPort: 80
+          containerPort: 8000
         resources: #CHANGE
           requests:
             cpu: 100m
@@ -62,9 +62,9 @@ metadata:
 spec:
   ports:
   - # nodePort: 30702 #CHANGE
-    port: 80 #CHANGE
+    port: 8000 #CHANGE
     protocol: TCP
-    targetPort: 80 #CHANGE
+    targetPort: 8000 #CHANGE
   selector:
     app: currency-exchange
   sessionAffinity: None #CHANGE
