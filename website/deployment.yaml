@@ -19,10 +19,10 @@ spec:
   template:
     metadata:
       labels:
-        app: currency-exchange
+        app: cv-devops
     spec:
       containers:
-      - name: currency-exchange
+      - name: cv-devops
         image: jamesmellors/cv-devops
         imagePullPolicy: IfNotPresent
         ports:
