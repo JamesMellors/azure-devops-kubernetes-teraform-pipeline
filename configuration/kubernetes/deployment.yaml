@@ -60,12 +60,8 @@ metadata:
   name: currency-exchange
   namespace: default
 spec:
+  type: ClusterIP
   ports:
-  - # nodePort: 30702 #CHANGE
-    port: 80 #CHANGE
-    protocol: TCP
-    targetPort: 8000 #CHANGE
+  - port: 8000 #CHANGE
   selector:
     app: currency-exchange
-  sessionAffinity: None #CHANGE
-  type: LoadBalancer
