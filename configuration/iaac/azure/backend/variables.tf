@@ -8,7 +8,7 @@ variable resource_group {
 }
 
 variable environment {
-    default = "dev"
+    default = "prod"
 }
 
 variable location {
