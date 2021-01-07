@@ -23,11 +23,11 @@ steps:
     backendServiceArm: 'azure-resource-manager-service-connection'
     ensureBackend: true
     backendAzureRmResourceGroupName: 'terraform-backend-rg'
-    backendAzureRmResourceGroupLocation: 'westeurope'
+    backendAzureRmResourceGroupLocation: 'westcentralus'
     backendAzureRmStorageAccountName: 'storageaccountjmellors'
     backendAzureRmContainerName: 'storageaccountjm'
     backendAzureRmKey: 'kubernetes-dev.tfstate'
-    allowTelemetryCollection: true
+    allowTelemetryCollection: false
 
 # - task: TerraformCLI@0
 #   inputs:
