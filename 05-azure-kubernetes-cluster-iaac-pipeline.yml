@@ -78,3 +78,25 @@ steps:
     releaseName: 'nginx-ingress'
     overrideValues: 'controller.replicaCount=2,controller.nodeSelector."beta\.kubernetes\.io/os"=linux,defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux,controller.admissionWebhooks.patch.nodeSelector."beta\.kubernetes\.io/os"=linux'
 
+- task: HelmDeploy@0
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: 'azure-resource-manager-service-connection'
+    azureResourceGroup: 'kubernetes_prod'
+    kubernetesCluster: 'k8prod_prod'
+    namespace: 'default'
+    command: 'repo'
+    arguments: 'add jetstack https://charts.jetstack.io'
+- task: HelmDeploy@0
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: 'azure-resource-manager-service-connection'
+    azureResourceGroup: 'kubernetes_prod'
+    kubernetesCluster: 'k8prod_prod'
+    namespace: 'default'
+    command: 'install'
+    chartType: 'Name'
+    chartName: 'jetstack/cert-manager'
+    releaseName: 'cert-manager'
+    overrideValues: 'version=v0.16.1,installCRDs=true,nodeSelector."beta\.kubernetes\.io/os"=linux,'
+
