@@ -27,8 +27,11 @@ resource "azurerm_kubernetes_cluster" "terraform-k8s" {
     node_count      = var.node_count
     vm_size         = "standard_b2s"
     os_disk_size_gb = "32"
-    load_balancer_sku = "Basic"
   }
+
+  network_profile {
+    load_balancer_sku = "Basic"
+  }  
 
   service_principal {
     client_id     = var.client_id
