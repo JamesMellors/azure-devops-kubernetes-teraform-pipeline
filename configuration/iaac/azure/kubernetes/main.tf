@@ -30,6 +30,8 @@ resource "azurerm_kubernetes_cluster" "terraform-k8s" {
   }
 
   network_profile {
+    network_plugin = "azure"
+    network_policy = "azure"
     load_balancer_sku = "Basic"
   }  
 
