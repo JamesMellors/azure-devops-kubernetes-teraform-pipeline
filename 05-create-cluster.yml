@@ -1,0 +1,94 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: echo K8S Terraform Azure!
+  displayName: 'Run a one-line script'
+
+- task: DownloadSecureFile@1
+  name: publicKey
+  inputs:
+    secureFile: 'azure_rsa.pub'
+
+
+- task: TerraformCLI@0
+  inputs:
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+    commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publicKey.secureFilePath)'
+    backendType: 'azurerm'
+    backendServiceArm: 'azure-resource-manager-service-connection'
+    ensureBackend: true
+    backendAzureRmResourceGroupName: 'terraform-backend-rg'
+    backendAzureRmResourceGroupLocation: 'eastus2'
+    backendAzureRmStorageAccountName: 'storageaccountjmellors'
+    backendAzureRmContainerName: 'storageaccountjm'
+    backendAzureRmKey: 'kubernetes-dev.tfstate'
+    allowTelemetryCollection: true
+
+# - task: TerraformCLI@0
+#   inputs:
+#     command: 'forceunlock'
+#     workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+#     allowTelemetryCollection: false
+#     lockID: 'fffebfc2-37dc-e67e-2cca-c39df38e0002'
+
+- task: TerraformCLI@0
+  inputs:
+    command: 'apply'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+    environmentServiceName: 'azure-resource-manager-service-connection'
+    commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publicKey.secureFilePath)'
+    allowTelemetryCollection: false
+
+- task: HelmInstaller@0
+  inputs:
+    helmVersion: '2.14.1'
+    installKubectl: true
+- task: HelmDeploy@0
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: 'azure-resource-manager-service-connection'
+    azureResourceGroup: 'kubernetes_prod'
+    kubernetesCluster: 'k8prod_prod'
+    namespace: 'default'
+    command: 'repo'
+    arguments: 'add ingress-nginx https://kubernetes.github.io/ingress-nginx'
+- task: HelmDeploy@0
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: 'azure-resource-manager-service-connection'
+    azureResourceGroup: 'kubernetes_prod'
+    kubernetesCluster: 'k8prod_prod'
+    namespace: 'default'
+    command: 'install'
+    chartType: 'Name'
+    chartName: 'ingress-nginx/ingress-nginx'
+    releaseName: 'nginx-ingress'
+    overrideValues: 'controller.replicaCount=2,controller.nodeSelector."beta\.kubernetes\.io/os"=linux,defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux,controller.admissionWebhooks.patch.nodeSelector."beta\.kubernetes\.io/os"=linux'
+
+- task: HelmDeploy@0
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: 'azure-resource-manager-service-connection'
+    azureResourceGroup: 'kubernetes_prod'
+    kubernetesCluster: 'k8prod_prod'
+    namespace: 'default'
+    command: 'repo'
+    arguments: 'add jetstack https://charts.jetstack.io'
+- task: HelmDeploy@0
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: 'azure-resource-manager-service-connection'
+    azureResourceGroup: 'kubernetes_prod'
+    kubernetesCluster: 'k8prod_prod'
+    namespace: 'default'
+    command: 'install'
+    chartType: 'Name'
+    chartName: 'jetstack/cert-manager'
+    releaseName: 'cert-manager'
+    overrideValues: 'version=v0.16.1,installCRDs=true,nodeSelector."beta\.kubernetes\.io/os"=linux,'
+
