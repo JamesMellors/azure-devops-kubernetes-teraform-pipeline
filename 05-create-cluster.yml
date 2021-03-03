@@ -90,5 +90,5 @@ steps:
     chartType: 'Name'
     chartName: 'jetstack/cert-manager'
     releaseName: 'cert-manager'
-    overrideValues: 'version=v0.16.1,installCRDs=true,nodeSelector."beta\.kubernetes\.io/os"=linux,'
+    overrideValues: 'version=v0.16.1,installCRDs=true,nodeSelector."beta\.kubernetes\.io/os"=linux,webhook.nodeSelector."kubernetes\.io/os"=linux,cainjector.nodeSelector."kubernetes\.io/os"=linux'
 
