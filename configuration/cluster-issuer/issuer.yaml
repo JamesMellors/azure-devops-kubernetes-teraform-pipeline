@@ -1,14 +1,33 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt
+  name: letsencrypt-stag
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     #server: https://acme-v02.api.letsencrypt.org/directory
-    email: jayt.v@hotmail.com
+    email: contact@james-mellors.com
     privateKeySecretRef:
-      name: letsencrypt
+      name: letsencrypt-stag
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+          podTemplate:
+            spec:
+              nodeSelector:
+                "kubernetes.io/os": linux
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: contact@james-mellors.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
     solvers:
     - http01:
         ingress:
