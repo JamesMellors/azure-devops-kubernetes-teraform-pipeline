@@ -17,6 +17,7 @@ jobs:
         instructions: 'Ready to destroy env'
 
   - job: destroyEnviroment
+    dependsOn: waitForValidation
     displayName: Removing enviroment
     steps:
     - script: echo K8S Terraform Azure!
