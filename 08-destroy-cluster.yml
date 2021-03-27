@@ -4,37 +4,52 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- script: echo K8S Terraform Azure!
-  displayName: 'Run a one-line script'
+jobs:
+  - job: waitForValidation
+    displayName: Wait for external validation
+    pool: server
+    timeoutInMinutes: 4320 # job times out in 3 days
+    steps:
+    - task: ManualValidation@0
+      timeoutInMinutes: 1440 # task times out in 1 day
+      inputs:
+        notifyUsers: 'jayt.v@hotmail.com'
+        instructions: 'Ready to destroy env'
 
-- task: DownloadSecureFile@1
-  name: publicKey
-  inputs:
-    secureFile: 'azure_rsa.pub'
+  - job: destroyEnviroment
+    displayName: Removing enviroment
+    pool: server
+    steps:
+    - script: echo K8S Terraform Azure!
+      displayName: 'Run a one-line script'
+
+    - task: DownloadSecureFile@1
+      name: publicKey
+      inputs:
+        secureFile: 'azure_rsa.pub'
 
 
-- task: ManualValidation@0
-  timeoutInMinutes: 1440 # task times out in 1 day
-  inputs:
-    notifyUsers: 'jayt.v@hotmail.com'
-    instructions: 'Are you sure you want to destroy Env'
-
-- task: TerraformCLI@0
-  inputs:
-    command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
-    commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publicKey.secureFilePath)'
-    backendType: 'azurerm'
-    backendServiceArm: 'azure-resource-manager-service-connection'
-    ensureBackend: true
-    backendAzureRmResourceGroupName: 'terraform-backend-rg'
-    backendAzureRmResourceGroupLocation: 'eastus2'
-    backendAzureRmStorageAccountName: 'storageaccountjmellors'
-    backendAzureRmContainerName: 'storageaccountjm'
-    backendAzureRmKey: 'kubernetes-dev.tfstate'
-    allowTelemetryCollection: true
-
+    - task: ManualValidation@0
+      timeoutInMinutes: 1440 # task times out in 1 day
+      inputs:
+        notifyUsers: 'jayt.v@hotmail.com'
+        instructions: 'Are you sure you want to destroy Env'
+    
+    - task: TerraformCLI@0
+      inputs:
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+        commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publicKey.secureFilePath)'
+        backendType: 'azurerm'
+        backendServiceArm: 'azure-resource-manager-service-connection'
+        ensureBackend: true
+        backendAzureRmResourceGroupName: 'terraform-backend-rg'
+        backendAzureRmResourceGroupLocation: 'eastus2'
+        backendAzureRmStorageAccountName: 'storageaccountjmellors'
+        backendAzureRmContainerName: 'storageaccountjm'
+        backendAzureRmKey: 'kubernetes-dev.tfstate'
+        allowTelemetryCollection: true
+    
 # - task: TerraformCLI@0
 #   inputs:
 #     command: 'forceunlock'
@@ -42,11 +57,10 @@ steps:
 #     allowTelemetryCollection: false
 #     lockID: 'fffebfc2-37dc-e67e-2cca-c39df38e0002'
 
-
-- task: TerraformCLI@0
-  inputs:
-    command: 'destroy'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
-    environmentServiceName: 'azure-resource-manager-service-connection'
-    commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publicKey.secureFilePath)'
-    allowTelemetryCollection: false
+    - task: TerraformCLI@0
+      inputs:
+        command: 'destroy'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+        environmentServiceName: 'azure-resource-manager-service-connection'
+        commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publicKey.secureFilePath)'
+        allowTelemetryCollection: false
