@@ -7,7 +7,6 @@ pool:
 jobs:
   - job: waitForValidation
     displayName: Wait for external validation
-    pool: server
     timeoutInMinutes: 4320 # job times out in 3 days
     steps:
     - task: ManualValidation@0
@@ -18,7 +17,6 @@ jobs:
 
   - job: destroyEnviroment
     displayName: Removing enviroment
-    pool: server
     steps:
     - script: echo K8S Terraform Azure!
       displayName: 'Run a one-line script'
