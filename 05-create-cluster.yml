@@ -12,8 +12,9 @@ steps:
   name: publicKey
   inputs:
     secureFile: 'azure_rsa.pub'
-
-
+- task: TerraformInstaller@0
+  inputs:
+    terraformVersion: '0.14.11'
 - task: TerraformCLI@0
   inputs:
     command: 'init'
