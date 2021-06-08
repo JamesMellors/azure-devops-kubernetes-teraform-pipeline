@@ -27,6 +27,11 @@ jobs:
       name: publicKey
       inputs:
         secureFile: 'azure_rsa.pub'
+
+    - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
+      inputs:
+        terraformVersion: '0.14.11'
+
     - task: TerraformCLI@0
       inputs:
         command: 'init'
